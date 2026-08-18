@@ -13,6 +13,7 @@
 		57DB6FF9DF8D5E3C3368EF66 /* DESTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB3E8E09424C553E0A1435E9 /* DESTests.swift */; };
 		5DA9592803A770CB706219CB /* DES.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B67B09FDD7053744169B6B /* DES.swift */; };
 		601606CB88158BDD9ADF6A66 /* RFBClientIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F4E5DF266F59808E1952A2D /* RFBClientIntegrationTests.swift */; };
+		6446515774A6F32F7B4AAFD5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0BE99B49E75E442DC9D2843A /* Assets.xcassets */; };
 		75C771EED84A6C9329348FD3 /* ByteCodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAB80EF0F13635B3FE203890 /* ByteCodingTests.swift */; };
 		81ABB51214E3D636DACEA680 /* RFBClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5FE4FB40C7334FA721E997 /* RFBClient.swift */; };
 		88758A72A920A9FA5145A378 /* RFBFrameBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED836C6497F6773B365F98B /* RFBFrameBuffer.swift */; };
@@ -46,6 +47,7 @@
 /* Begin PBXFileReference section */
 		004F8BBA2A7BA01CADFB60DA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		0BAFFDFEEB136CBFCD7AD898 /* TailVNC.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = TailVNC.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0BE99B49E75E442DC9D2843A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		26B8B418CCBBC00437CC9DC4 /* RemoteSessionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSessionModel.swift; sourceTree = "<group>"; };
 		4D1C1FF9F445F8F8F06E367A /* RFBFrameBufferTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RFBFrameBufferTests.swift; sourceTree = "<group>"; };
 		52726E8FD69C0E327D6F1A36 /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 		9A300038B85D9604F0610677 /* TailVNC */ = {
 			isa = PBXGroup;
 			children = (
+				0BE99B49E75E442DC9D2843A /* Assets.xcassets */,
 				FC454A8B4343EC83811B0A48 /* Info.plist */,
 				B33B5E37655F5CC26E39E1B6 /* App */,
 				3C9A09AD5F0C8076494873C6 /* Core */,
@@ -195,6 +198,7 @@
 			buildConfigurationList = FC77857AF489786D4068DD46 /* Build configuration list for PBXNativeTarget "TailVNC" */;
 			buildPhases = (
 				B1BCFECC36EC062C592A292B /* Sources */,
+				A9A8569F6C2BCCFDDB640B90 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -248,6 +252,17 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A9A8569F6C2BCCFDDB640B90 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6446515774A6F32F7B4AAFD5 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		84AD10A2CC66F13ACD5818FC /* Sources */ = {
