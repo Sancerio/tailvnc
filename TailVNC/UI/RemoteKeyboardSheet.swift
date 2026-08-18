@@ -79,9 +79,23 @@ private struct KeyboardCaptureView: UIViewRepresentable {
     }
 }
 
-private final class CaptureTextField: UITextField {
+final class CaptureTextField: UITextField {
     var onText: ((String) -> Void)?
     var onDelete: (() -> Void)?
+    private var isClearingMirroredText = false
+
+    // iPhone Mirroring can update a text field through accessibility instead of
+    // calling UIKeyInput.insertText(_:). Forward that path too, then keep the
+    // capture field empty so it never becomes a local text editor.
+    override var text: String? {
+        didSet {
+            guard !isClearingMirroredText, let text, !text.isEmpty else { return }
+            isClearingMirroredText = true
+            self.text = ""
+            isClearingMirroredText = false
+            onText?(text)
+        }
+    }
 
     override func insertText(_ text: String) {
         onText?(text)

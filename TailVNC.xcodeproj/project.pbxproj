@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		043981FC7C0F9937439D14C2 /* CaptureTextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA36A50D026656D77AAD21B /* CaptureTextFieldTests.swift */; };
 		2008FC357BB92B7F1DC1C2C5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 004F8BBA2A7BA01CADFB60DA /* ContentView.swift */; };
 		35641C1FEF823350FA474263 /* RFBFrameBufferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D1C1FF9F445F8F8F06E367A /* RFBFrameBufferTests.swift */; };
 		3C571B25A2781CD30C626E2E /* VNCAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C71D4FD2FA007B964E4A9 /* VNCAuthentication.swift */; };
@@ -54,6 +55,7 @@
 		52BBC07EE8E90FA348124A0E /* TailVNCApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TailVNCApp.swift; sourceTree = "<group>"; };
 		76CE8BDF15E7EAAFE1F60BE7 /* ConnectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionView.swift; sourceTree = "<group>"; };
 		7B5FE4FB40C7334FA721E997 /* RFBClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RFBClient.swift; sourceTree = "<group>"; };
+		7CA36A50D026656D77AAD21B /* CaptureTextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureTextFieldTests.swift; sourceTree = "<group>"; };
 		7F4E5DF266F59808E1952A2D /* RFBClientIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RFBClientIntegrationTests.swift; sourceTree = "<group>"; };
 		8B5C71D4FD2FA007B964E4A9 /* VNCAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VNCAuthentication.swift; sourceTree = "<group>"; };
 		C8B67B09FDD7053744169B6B /* DES.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DES.swift; sourceTree = "<group>"; };
@@ -82,6 +84,7 @@
 			isa = PBXGroup;
 			children = (
 				CAB80EF0F13635B3FE203890 /* ByteCodingTests.swift */,
+				7CA36A50D026656D77AAD21B /* CaptureTextFieldTests.swift */,
 				EB3E8E09424C553E0A1435E9 /* DESTests.swift */,
 				7F4E5DF266F59808E1952A2D /* RFBClientIntegrationTests.swift */,
 				4D1C1FF9F445F8F8F06E367A /* RFBFrameBufferTests.swift */,
@@ -297,6 +300,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				75C771EED84A6C9329348FD3 /* ByteCodingTests.swift in Sources */,
+				043981FC7C0F9937439D14C2 /* CaptureTextFieldTests.swift in Sources */,
 				57DB6FF9DF8D5E3C3368EF66 /* DESTests.swift in Sources */,
 				601606CB88158BDD9ADF6A66 /* RFBClientIntegrationTests.swift in Sources */,
 				35641C1FEF823350FA474263 /* RFBFrameBufferTests.swift in Sources */,
@@ -323,6 +327,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -339,6 +344,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -420,7 +426,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -449,6 +455,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -496,7 +503,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -532,6 +539,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
