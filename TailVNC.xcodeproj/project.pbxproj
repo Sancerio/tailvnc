@@ -1,0 +1,574 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2008FC357BB92B7F1DC1C2C5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 004F8BBA2A7BA01CADFB60DA /* ContentView.swift */; };
+		35641C1FEF823350FA474263 /* RFBFrameBufferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D1C1FF9F445F8F8F06E367A /* RFBFrameBufferTests.swift */; };
+		3C571B25A2781CD30C626E2E /* VNCAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C71D4FD2FA007B964E4A9 /* VNCAuthentication.swift */; };
+		57DB6FF9DF8D5E3C3368EF66 /* DESTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB3E8E09424C553E0A1435E9 /* DESTests.swift */; };
+		5DA9592803A770CB706219CB /* DES.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B67B09FDD7053744169B6B /* DES.swift */; };
+		601606CB88158BDD9ADF6A66 /* RFBClientIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F4E5DF266F59808E1952A2D /* RFBClientIntegrationTests.swift */; };
+		75C771EED84A6C9329348FD3 /* ByteCodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAB80EF0F13635B3FE203890 /* ByteCodingTests.swift */; };
+		81ABB51214E3D636DACEA680 /* RFBClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5FE4FB40C7334FA721E997 /* RFBClient.swift */; };
+		88758A72A920A9FA5145A378 /* RFBFrameBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED836C6497F6773B365F98B /* RFBFrameBuffer.swift */; };
+		898D77655F6C3C170A3F6C98 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52726E8FD69C0E327D6F1A36 /* KeychainStore.swift */; };
+		A1C3B38B7E4D991A3B95D091 /* RemoteKeyboardSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECB1DABE9DD59D8510B22495 /* RemoteKeyboardSheet.swift */; };
+		A9A95720E3340D759F9C03F3 /* TailVNCUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F17C6EC10560151DB5C4ACC5 /* TailVNCUITests.swift */; };
+		B1C527BA2C507BDE83A968C7 /* ByteCoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCBEA4B099004A260E9C7B91 /* ByteCoding.swift */; };
+		BD933F6DB803552DE96CC8C6 /* RemoteSessionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B8B418CCBBC00437CC9DC4 /* RemoteSessionModel.swift */; };
+		C6102AB21B5FD9EC239D62D5 /* TailVNCApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52BBC07EE8E90FA348124A0E /* TailVNCApp.swift */; };
+		DBC9C6DF4259287D57241F84 /* RemoteDesktopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE9597F82DE878B0C5675C64 /* RemoteDesktopView.swift */; };
+		EB7D80AB70A0689FBC918D58 /* ConnectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76CE8BDF15E7EAAFE1F60BE7 /* ConnectionView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		52EEA96D0A208883E9B150E4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CAD410EF17DE9A9EE0D0B2D8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FD690EE12B4D5E63BF378C6D;
+			remoteInfo = TailVNC;
+		};
+		A10035D99523DC502EBD365D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CAD410EF17DE9A9EE0D0B2D8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FD690EE12B4D5E63BF378C6D;
+			remoteInfo = TailVNC;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		004F8BBA2A7BA01CADFB60DA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		0BAFFDFEEB136CBFCD7AD898 /* TailVNC.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = TailVNC.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		26B8B418CCBBC00437CC9DC4 /* RemoteSessionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSessionModel.swift; sourceTree = "<group>"; };
+		4D1C1FF9F445F8F8F06E367A /* RFBFrameBufferTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RFBFrameBufferTests.swift; sourceTree = "<group>"; };
+		52726E8FD69C0E327D6F1A36 /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
+		52BBC07EE8E90FA348124A0E /* TailVNCApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TailVNCApp.swift; sourceTree = "<group>"; };
+		76CE8BDF15E7EAAFE1F60BE7 /* ConnectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionView.swift; sourceTree = "<group>"; };
+		7B5FE4FB40C7334FA721E997 /* RFBClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RFBClient.swift; sourceTree = "<group>"; };
+		7F4E5DF266F59808E1952A2D /* RFBClientIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RFBClientIntegrationTests.swift; sourceTree = "<group>"; };
+		8B5C71D4FD2FA007B964E4A9 /* VNCAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VNCAuthentication.swift; sourceTree = "<group>"; };
+		C8B67B09FDD7053744169B6B /* DES.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DES.swift; sourceTree = "<group>"; };
+		CAB80EF0F13635B3FE203890 /* ByteCodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ByteCodingTests.swift; sourceTree = "<group>"; };
+		CED836C6497F6773B365F98B /* RFBFrameBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RFBFrameBuffer.swift; sourceTree = "<group>"; };
+		EB3E8E09424C553E0A1435E9 /* DESTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DESTests.swift; sourceTree = "<group>"; };
+		ECB1DABE9DD59D8510B22495 /* RemoteKeyboardSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteKeyboardSheet.swift; sourceTree = "<group>"; };
+		EE9597F82DE878B0C5675C64 /* RemoteDesktopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDesktopView.swift; sourceTree = "<group>"; };
+		F17C6EC10560151DB5C4ACC5 /* TailVNCUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TailVNCUITests.swift; sourceTree = "<group>"; };
+		FB5F715FCFF4173D726DBC68 /* TailVNCUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = TailVNCUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FC454A8B4343EC83811B0A48 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		FCBEA4B099004A260E9C7B91 /* ByteCoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ByteCoding.swift; sourceTree = "<group>"; };
+		FE76EAFB841376615F3870C0 /* TailVNCTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = TailVNCTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		0B753740D67C9885F4351889 /* TailVNCUITests */ = {
+			isa = PBXGroup;
+			children = (
+				F17C6EC10560151DB5C4ACC5 /* TailVNCUITests.swift */,
+			);
+			path = TailVNCUITests;
+			sourceTree = "<group>";
+		};
+		2A6823B620140FFAAD80380B /* TailVNCTests */ = {
+			isa = PBXGroup;
+			children = (
+				CAB80EF0F13635B3FE203890 /* ByteCodingTests.swift */,
+				EB3E8E09424C553E0A1435E9 /* DESTests.swift */,
+				7F4E5DF266F59808E1952A2D /* RFBClientIntegrationTests.swift */,
+				4D1C1FF9F445F8F8F06E367A /* RFBFrameBufferTests.swift */,
+			);
+			path = TailVNCTests;
+			sourceTree = "<group>";
+		};
+		2E9B96A802AAFE27F0938576 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				76CE8BDF15E7EAAFE1F60BE7 /* ConnectionView.swift */,
+				EE9597F82DE878B0C5675C64 /* RemoteDesktopView.swift */,
+				ECB1DABE9DD59D8510B22495 /* RemoteKeyboardSheet.swift */,
+				26B8B418CCBBC00437CC9DC4 /* RemoteSessionModel.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		38883F0B74D8D40D81459721 = {
+			isa = PBXGroup;
+			children = (
+				9A300038B85D9604F0610677 /* TailVNC */,
+				2A6823B620140FFAAD80380B /* TailVNCTests */,
+				0B753740D67C9885F4351889 /* TailVNCUITests */,
+				86992CF644A97E0E0759D646 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		3C9A09AD5F0C8076494873C6 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				FCBEA4B099004A260E9C7B91 /* ByteCoding.swift */,
+				C8B67B09FDD7053744169B6B /* DES.swift */,
+				52726E8FD69C0E327D6F1A36 /* KeychainStore.swift */,
+				7B5FE4FB40C7334FA721E997 /* RFBClient.swift */,
+				CED836C6497F6773B365F98B /* RFBFrameBuffer.swift */,
+				8B5C71D4FD2FA007B964E4A9 /* VNCAuthentication.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		86992CF644A97E0E0759D646 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0BAFFDFEEB136CBFCD7AD898 /* TailVNC.app */,
+				FE76EAFB841376615F3870C0 /* TailVNCTests.xctest */,
+				FB5F715FCFF4173D726DBC68 /* TailVNCUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9A300038B85D9604F0610677 /* TailVNC */ = {
+			isa = PBXGroup;
+			children = (
+				FC454A8B4343EC83811B0A48 /* Info.plist */,
+				B33B5E37655F5CC26E39E1B6 /* App */,
+				3C9A09AD5F0C8076494873C6 /* Core */,
+				2E9B96A802AAFE27F0938576 /* UI */,
+			);
+			path = TailVNC;
+			sourceTree = "<group>";
+		};
+		B33B5E37655F5CC26E39E1B6 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				004F8BBA2A7BA01CADFB60DA /* ContentView.swift */,
+				52BBC07EE8E90FA348124A0E /* TailVNCApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5F029AE3188C22A7BDFF3297 /* TailVNCUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5C88A33AD9FFC1535026AEEC /* Build configuration list for PBXNativeTarget "TailVNCUITests" */;
+			buildPhases = (
+				84AD10A2CC66F13ACD5818FC /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9A4A28A5C6C1569CE2786B26 /* PBXTargetDependency */,
+			);
+			name = TailVNCUITests;
+			packageProductDependencies = (
+			);
+			productName = TailVNCUITests;
+			productReference = FB5F715FCFF4173D726DBC68 /* TailVNCUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		CE77E5073AFF072C66FB57BB /* TailVNCTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B9891013300851124CD27A73 /* Build configuration list for PBXNativeTarget "TailVNCTests" */;
+			buildPhases = (
+				B8FA792AE8D11505AB456ECA /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9D9F5BF2DF817E4E0DD7CDDF /* PBXTargetDependency */,
+			);
+			name = TailVNCTests;
+			packageProductDependencies = (
+			);
+			productName = TailVNCTests;
+			productReference = FE76EAFB841376615F3870C0 /* TailVNCTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		FD690EE12B4D5E63BF378C6D /* TailVNC */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FC77857AF489786D4068DD46 /* Build configuration list for PBXNativeTarget "TailVNC" */;
+			buildPhases = (
+				B1BCFECC36EC062C592A292B /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TailVNC;
+			packageProductDependencies = (
+			);
+			productName = TailVNC;
+			productReference = 0BAFFDFEEB136CBFCD7AD898 /* TailVNC.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CAD410EF17DE9A9EE0D0B2D8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					5F029AE3188C22A7BDFF3297 = {
+						ProvisioningStyle = Automatic;
+						TestTargetID = FD690EE12B4D5E63BF378C6D;
+					};
+					CE77E5073AFF072C66FB57BB = {
+						ProvisioningStyle = Automatic;
+					};
+					FD690EE12B4D5E63BF378C6D = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = C74BB0B56027078C8B7E56EE /* Build configuration list for PBXProject "TailVNC" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 38883F0B74D8D40D81459721;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 86992CF644A97E0E0759D646 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FD690EE12B4D5E63BF378C6D /* TailVNC */,
+				CE77E5073AFF072C66FB57BB /* TailVNCTests */,
+				5F029AE3188C22A7BDFF3297 /* TailVNCUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		84AD10A2CC66F13ACD5818FC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A9A95720E3340D759F9C03F3 /* TailVNCUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B1BCFECC36EC062C592A292B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B1C527BA2C507BDE83A968C7 /* ByteCoding.swift in Sources */,
+				EB7D80AB70A0689FBC918D58 /* ConnectionView.swift in Sources */,
+				2008FC357BB92B7F1DC1C2C5 /* ContentView.swift in Sources */,
+				5DA9592803A770CB706219CB /* DES.swift in Sources */,
+				898D77655F6C3C170A3F6C98 /* KeychainStore.swift in Sources */,
+				81ABB51214E3D636DACEA680 /* RFBClient.swift in Sources */,
+				88758A72A920A9FA5145A378 /* RFBFrameBuffer.swift in Sources */,
+				DBC9C6DF4259287D57241F84 /* RemoteDesktopView.swift in Sources */,
+				A1C3B38B7E4D991A3B95D091 /* RemoteKeyboardSheet.swift in Sources */,
+				BD933F6DB803552DE96CC8C6 /* RemoteSessionModel.swift in Sources */,
+				C6102AB21B5FD9EC239D62D5 /* TailVNCApp.swift in Sources */,
+				3C571B25A2781CD30C626E2E /* VNCAuthentication.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8FA792AE8D11505AB456ECA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				75C771EED84A6C9329348FD3 /* ByteCodingTests.swift in Sources */,
+				57DB6FF9DF8D5E3C3368EF66 /* DESTests.swift in Sources */,
+				601606CB88158BDD9ADF6A66 /* RFBClientIntegrationTests.swift in Sources */,
+				35641C1FEF823350FA474263 /* RFBFrameBufferTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		9A4A28A5C6C1569CE2786B26 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FD690EE12B4D5E63BF378C6D /* TailVNC */;
+			targetProxy = 52EEA96D0A208883E9B150E4 /* PBXContainerItemProxy */;
+		};
+		9D9F5BF2DF817E4E0DD7CDDF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FD690EE12B4D5E63BF378C6D /* TailVNC */;
+			targetProxy = A10035D99523DC502EBD365D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		03BF68C6A18F00F66827B42C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sancerio.tailvnc.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TailVNC.app/TailVNC";
+			};
+			name = Release;
+		};
+		792A1A9A238A129C7FDD94A2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sancerio.tailvnc.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = TailVNC;
+			};
+			name = Release;
+		};
+		B687FE3BFD8B18031AA110AA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = TailVNC/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sancerio.tailvnc;
+				PRODUCT_NAME = TailVNC;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D039A92C9C5744A1A1F31FA0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = TailVNC/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sancerio.tailvnc;
+				PRODUCT_NAME = TailVNC;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		D0B41D2A3DA27AA067027BA2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		DD771A87206014DDD13D6FEA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sancerio.tailvnc.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TailVNC.app/TailVNC";
+			};
+			name = Debug;
+		};
+		EB13B51E367DE8674C02D311 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		FF28BBD6C625FD0BCC02FCCF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sancerio.tailvnc.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = TailVNC;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5C88A33AD9FFC1535026AEEC /* Build configuration list for PBXNativeTarget "TailVNCUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FF28BBD6C625FD0BCC02FCCF /* Debug */,
+				792A1A9A238A129C7FDD94A2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		B9891013300851124CD27A73 /* Build configuration list for PBXNativeTarget "TailVNCTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DD771A87206014DDD13D6FEA /* Debug */,
+				03BF68C6A18F00F66827B42C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C74BB0B56027078C8B7E56EE /* Build configuration list for PBXProject "TailVNC" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EB13B51E367DE8674C02D311 /* Debug */,
+				D0B41D2A3DA27AA067027BA2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		FC77857AF489786D4068DD46 /* Build configuration list for PBXNativeTarget "TailVNC" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B687FE3BFD8B18031AA110AA /* Debug */,
+				D039A92C9C5744A1A1F31FA0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = CAD410EF17DE9A9EE0D0B2D8 /* Project object */;
+}
