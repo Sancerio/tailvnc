@@ -67,6 +67,7 @@ private struct KeyboardCaptureView: UIViewRepresentable {
         field.returnKeyType = .default
         field.onText = onText
         field.onDelete = onDelete
+        field.installInputBridge()
         DispatchQueue.main.async {
             field.becomeFirstResponder()
         }
@@ -82,19 +83,16 @@ private struct KeyboardCaptureView: UIViewRepresentable {
 final class CaptureTextField: UITextField {
     var onText: ((String) -> Void)?
     var onDelete: (() -> Void)?
-    private var isClearingMirroredText = false
+    private var isFlushingBufferedText = false
 
-    // iPhone Mirroring can update a text field through accessibility instead of
-    // calling UIKeyInput.insertText(_:). Forward that path too, then keep the
-    // capture field empty so it never becomes a local text editor.
-    override var text: String? {
-        didSet {
-            guard !isClearingMirroredText, let text, !text.isEmpty else { return }
-            isClearingMirroredText = true
-            self.text = ""
-            isClearingMirroredText = false
-            onText?(text)
-        }
+    func installInputBridge() {
+        addTarget(self, action: #selector(flushBufferedText), for: .editingChanged)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(textDidChange(_:)),
+            name: UITextField.textDidChangeNotification,
+            object: self
+        )
     }
 
     override func insertText(_ text: String) {
@@ -103,5 +101,21 @@ final class CaptureTextField: UITextField {
 
     override func deleteBackward() {
         onDelete?()
+    }
+
+    @objc private func textDidChange(_ notification: Notification) {
+        flushBufferedText()
+    }
+
+    @objc private func flushBufferedText() {
+        guard !isFlushingBufferedText, let value = text, !value.isEmpty else { return }
+        isFlushingBufferedText = true
+        text = ""
+        isFlushingBufferedText = false
+        onText?(value)
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 }

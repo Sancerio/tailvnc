@@ -4,14 +4,29 @@ import XCTest
 
 @MainActor
 final class CaptureTextFieldTests: XCTestCase {
-    func testMirroringStyleTextAssignmentIsForwardedAndCleared() {
+    func testMirroringEditingChangeIsForwardedAndCleared() {
         let field = CaptureTextField()
         var forwarded: [String] = []
         field.onText = { forwarded.append($0) }
+        field.installInputBridge()
 
         field.text = "abc"
+        field.sendActions(for: .editingChanged)
 
         XCTAssertEqual(forwarded, ["abc"])
+        XCTAssertEqual(field.text, "")
+    }
+
+    func testMirroringTextChangeNotificationIsForwardedAndCleared() {
+        let field = CaptureTextField()
+        var forwarded: [String] = []
+        field.onText = { forwarded.append($0) }
+        field.installInputBridge()
+
+        field.text = "xyz"
+        NotificationCenter.default.post(name: UITextField.textDidChangeNotification, object: field)
+
+        XCTAssertEqual(forwarded, ["xyz"])
         XCTAssertEqual(field.text, "")
     }
 
@@ -19,6 +34,7 @@ final class CaptureTextFieldTests: XCTestCase {
         let field = CaptureTextField()
         var forwarded: [String] = []
         field.onText = { forwarded.append($0) }
+        field.installInputBridge()
 
         field.insertText("x")
 
@@ -30,6 +46,7 @@ final class CaptureTextFieldTests: XCTestCase {
         let field = CaptureTextField()
         var deleteCount = 0
         field.onDelete = { deleteCount += 1 }
+        field.installInputBridge()
 
         field.deleteBackward()
 
