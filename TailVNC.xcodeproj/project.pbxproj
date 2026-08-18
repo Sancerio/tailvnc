@@ -224,13 +224,16 @@
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					5F029AE3188C22A7BDFF3297 = {
+						DevelopmentTeam = FZZ26XMXRC;
 						ProvisioningStyle = Automatic;
 						TestTargetID = FD690EE12B4D5E63BF378C6D;
 					};
 					CE77E5073AFF072C66FB57BB = {
+						DevelopmentTeam = FZZ26XMXRC;
 						ProvisioningStyle = Automatic;
 					};
 					FD690EE12B4D5E63BF378C6D = {
+						DevelopmentTeam = FZZ26XMXRC;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -428,6 +431,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = FZZ26XMXRC;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -505,6 +509,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = FZZ26XMXRC;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
