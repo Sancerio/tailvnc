@@ -52,4 +52,18 @@ final class CaptureTextFieldTests: XCTestCase {
 
         XCTAssertEqual(deleteCount, 1)
     }
+
+    func testReturnIsForwardedAsRemoteReturnKey() {
+        let field = CaptureTextField()
+        var returnCount = 0
+        var forwarded: [String] = []
+        field.onReturn = { returnCount += 1 }
+        field.onText = { forwarded.append($0) }
+        field.installInputBridge()
+
+        field.insertText("\n")
+
+        XCTAssertEqual(returnCount, 1)
+        XCTAssertTrue(forwarded.isEmpty)
+    }
 }

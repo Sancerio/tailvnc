@@ -7,7 +7,7 @@ final class TailVNCUITests: XCTestCase {
 
     func testConnectionFormIsReadyWithoutEmbeddedEndpoint() {
         let app = XCUIApplication()
-        app.launchArguments = ["-ApplePersistenceIgnoreState", "YES"]
+        app.launchArguments = ["-ApplePersistenceIgnoreState", "YES", "-ui-testing"]
         app.launch()
 
         let host = app.textFields["hostField"]

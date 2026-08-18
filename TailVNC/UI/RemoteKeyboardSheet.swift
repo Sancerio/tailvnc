@@ -1,59 +1,11 @@
 import SwiftUI
 import UIKit
 
-struct RemoteKeyboardSheet: View {
-    @ObservedObject var session: RemoteSessionModel
-
-    var body: some View {
-        VStack(spacing: 18) {
-            HStack {
-                Text("Remote keyboard")
-                    .font(.headline)
-                Spacer()
-                Text("Typing goes to the Mac")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-
-            KeyboardCaptureView(
-                onText: session.sendText,
-                onDelete: { session.sendKey(0xff08) }
-            )
-            .frame(height: 44)
-            .overlay {
-                RoundedRectangle(cornerRadius: 12)
-                    .stroke(.secondary.opacity(0.35))
-            }
-
-            HStack(spacing: 10) {
-                keyButton("Esc", keysym: 0xff1b)
-                keyButton("Tab", keysym: 0xff09)
-                keyButton("Return", keysym: 0xff0d)
-                keyButton("⌫", keysym: 0xff08)
-            }
-
-            HStack(spacing: 10) {
-                keyButton("←", keysym: 0xff51)
-                keyButton("↑", keysym: 0xff52)
-                keyButton("↓", keysym: 0xff54)
-                keyButton("→", keysym: 0xff53)
-            }
-        }
-        .padding(20)
-    }
-
-    private func keyButton(_ label: String, keysym: UInt32) -> some View {
-        Button(label) {
-            session.sendKey(keysym)
-        }
-        .buttonStyle(.bordered)
-        .frame(maxWidth: .infinity)
-    }
-}
-
-private struct KeyboardCaptureView: UIViewRepresentable {
+struct KeyboardCaptureView: UIViewRepresentable {
+    let isActive: Bool
     let onText: (String) -> Void
     let onDelete: () -> Void
+    let onReturn: () -> Void
 
     func makeUIView(context: Context) -> CaptureTextField {
         let field = CaptureTextField()
@@ -67,22 +19,29 @@ private struct KeyboardCaptureView: UIViewRepresentable {
         field.returnKeyType = .default
         field.onText = onText
         field.onDelete = onDelete
+        field.onReturn = onReturn
         field.installInputBridge()
-        DispatchQueue.main.async {
-            field.becomeFirstResponder()
-        }
         return field
     }
 
     func updateUIView(_ uiView: CaptureTextField, context: Context) {
         uiView.onText = onText
         uiView.onDelete = onDelete
+        uiView.onReturn = onReturn
+        DispatchQueue.main.async {
+            if isActive, !uiView.isFirstResponder {
+                uiView.becomeFirstResponder()
+            } else if !isActive, uiView.isFirstResponder {
+                uiView.resignFirstResponder()
+            }
+        }
     }
 }
 
 final class CaptureTextField: UITextField {
     var onText: ((String) -> Void)?
     var onDelete: (() -> Void)?
+    var onReturn: (() -> Void)?
     private var isFlushingBufferedText = false
 
     func installInputBridge() {
@@ -96,6 +55,10 @@ final class CaptureTextField: UITextField {
     }
 
     override func insertText(_ text: String) {
+        if text == "\n" || text == "\r" {
+            onReturn?()
+            return
+        }
         onText?(text)
     }
 

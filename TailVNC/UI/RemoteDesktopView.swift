@@ -2,7 +2,8 @@ import SwiftUI
 
 struct RemoteDesktopView: View {
     @ObservedObject var session: RemoteSessionModel
-    @State private var showKeyboard = false
+    @State private var controlsExpanded = false
+    @State private var keyboardActive = false
 
     var body: some View {
         ZStack {
@@ -14,17 +15,21 @@ struct RemoteDesktopView: View {
                 connectingView
             }
 
-            VStack {
-                statusBar
-                Spacer()
-                controls
-            }
-            .padding()
+            chrome
+
+            KeyboardCaptureView(
+                isActive: keyboardActive,
+                onText: session.sendText,
+                onDelete: { session.sendKey(0xff08) },
+                onReturn: { session.sendKey(0xff0d) }
+            )
+            .frame(width: 2, height: 2)
+            .position(x: -4, y: -4)
+            .accessibilityHidden(true)
         }
-        .sheet(isPresented: $showKeyboard) {
-            RemoteKeyboardSheet(session: session)
-                .presentationDetents([.height(230)])
-                .presentationDragIndicator(.visible)
+        .persistentSystemOverlays(.hidden)
+        .onDisappear {
+            keyboardActive = false
         }
     }
 
@@ -57,41 +62,112 @@ struct RemoteDesktopView: View {
         .padding(30)
     }
 
-    private var statusBar: some View {
-        HStack(spacing: 10) {
+    private var chrome: some View {
+        GeometryReader { geometry in
+            let isLandscape = geometry.size.width > geometry.size.height
+
+            ZStack {
+                VStack {
+                    HStack {
+                        connectionIndicator
+                        Spacer()
+                    }
+                    Spacer()
+                }
+
+                if isLandscape {
+                    HStack {
+                        Spacer()
+                        controls(isLandscape: true)
+                    }
+                } else {
+                    VStack {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            controls(isLandscape: false)
+                        }
+                    }
+                }
+            }
+            .padding(8)
+        }
+        .animation(.snappy(duration: 0.22), value: controlsExpanded)
+        .animation(.snappy(duration: 0.22), value: keyboardActive)
+    }
+
+    private var connectionIndicator: some View {
+        HStack(spacing: 7) {
             Circle()
                 .fill(session.frame == nil ? .orange : .green)
                 .frame(width: 8, height: 8)
-            Text(session.statusText)
-                .font(.caption.weight(.semibold))
-                .lineLimit(1)
-            Spacer()
-            Button("Disconnect", systemImage: "xmark.circle.fill") {
-                session.disconnect()
+
+            if controlsExpanded || session.frame == nil {
+                Text(session.statusText)
+                    .font(.caption.weight(.semibold))
+                    .lineLimit(1)
+                    .transition(.opacity.combined(with: .move(edge: .leading)))
             }
-            .labelStyle(.iconOnly)
-            .font(.title3)
-            .accessibilityIdentifier("disconnectButton")
         }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 10)
+        .padding(controlsExpanded || session.frame == nil ? 10 : 8)
         .background(.ultraThinMaterial, in: Capsule())
+        .allowsHitTesting(false)
     }
 
-    private var controls: some View {
-        HStack(spacing: 12) {
-            controlButton("Scroll up", systemImage: "arrow.up") {
-                session.scroll(up: true)
+    private func controls(isLandscape: Bool) -> some View {
+        let layout = isLandscape
+            ? AnyLayout(VStackLayout(spacing: 4))
+            : AnyLayout(HStackLayout(spacing: 4))
+
+        return layout {
+            if controlsExpanded {
+                controlButton("Scroll up", systemImage: "arrow.up") {
+                    session.scroll(up: true)
+                }
+
+                controlButton(
+                    keyboardActive ? "Stop typing" : "Type on Mac",
+                    systemImage: keyboardActive ? "keyboard.fill" : "keyboard"
+                ) {
+                    keyboardActive.toggle()
+                }
+                .foregroundStyle(keyboardActive ? .cyan : .primary)
+                .accessibilityIdentifier("keyboardToggleButton")
+
+                controlButton("Return", systemImage: "arrow.turn.down.left") {
+                    session.sendKey(0xff0d)
+                }
+
+                controlButton("Scroll down", systemImage: "arrow.down") {
+                    session.scroll(up: false)
+                }
+
+                controlButton("Disconnect", systemImage: "xmark") {
+                    keyboardActive = false
+                    session.disconnect()
+                }
+                .accessibilityIdentifier("disconnectButton")
             }
-            controlButton("Keyboard", systemImage: "keyboard") {
-                showKeyboard = true
+
+            Button {
+                controlsExpanded.toggle()
+            } label: {
+                Image(systemName: controlsExpanded ? "chevron.right" : (keyboardActive ? "keyboard.fill" : "ellipsis"))
+                    .font(.body.weight(.semibold))
+                    .frame(width: 44, height: 44)
+                    .contentShape(Circle())
             }
-            controlButton("Scroll down", systemImage: "arrow.down") {
-                session.scroll(up: false)
-            }
+            .buttonStyle(.plain)
+            .foregroundStyle(keyboardActive ? .cyan : .primary)
+            .accessibilityLabel(controlsExpanded ? "Hide controls" : "Show controls")
+            .accessibilityIdentifier("controlsToggleButton")
         }
-        .padding(8)
-        .background(.ultraThinMaterial, in: Capsule())
+        .padding(4)
+        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 26, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 26, style: .continuous)
+                .stroke(.white.opacity(0.12), lineWidth: 0.5)
+        }
     }
 
     private func controlButton(
@@ -101,7 +177,8 @@ struct RemoteDesktopView: View {
     ) -> some View {
         Button(action: action) {
             Image(systemName: systemImage)
-                .frame(width: 42, height: 34)
+                .frame(width: 44, height: 44)
+                .contentShape(Circle())
         }
         .buttonStyle(.plain)
         .accessibilityLabel(title)
