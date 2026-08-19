@@ -14,7 +14,8 @@ TailVNC is an early MVP. It currently targets the smallest useful feature set:
 - RFB 3.8 negotiation, including Apple's `RFB 003.889` greeting
 - standard VNC challenge-response authentication
 - raw framebuffer updates in 32-bit true color
-- touch pointer input, dragging, scrolling, and common keyboard keys
+- touch pointer input, dragging, scrolling, pinch-to-zoom (up to 4×), and panning
+- software and hardware keyboard input for common keys
 - optional password storage in the iOS Keychain
 - direct host, MagicDNS name, or IP address connections
 

@@ -16,4 +16,23 @@ final class TailVNCUITests: XCTestCase {
         XCTAssertTrue(app.secureTextFields["passwordField"].exists)
         XCTAssertFalse(app.buttons["connectButton"].isEnabled)
     }
+
+    func testPinchZoomShowsIndicatorAndCanBeReset() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-ApplePersistenceIgnoreState", "YES", "-ui-testing", "-ui-testing-remote"]
+        app.launch()
+
+        let viewport = app.otherElements["remoteViewport"]
+        XCTAssertTrue(viewport.waitForExistence(timeout: 5))
+        viewport.pinch(withScale: 2, velocity: 1)
+
+        let zoomIndicator = app.staticTexts["zoomIndicator"]
+        XCTAssertTrue(zoomIndicator.waitForExistence(timeout: 2))
+
+        app.buttons["controlsToggleButton"].tap()
+        let resetZoom = app.buttons["resetZoomButton"]
+        XCTAssertTrue(resetZoom.waitForExistence(timeout: 2))
+        resetZoom.tap()
+        XCTAssertFalse(zoomIndicator.waitForExistence(timeout: 0.5))
+    }
 }
