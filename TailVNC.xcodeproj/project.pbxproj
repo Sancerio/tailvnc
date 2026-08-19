@@ -8,13 +8,17 @@
 
 /* Begin PBXBuildFile section */
 		043981FC7C0F9937439D14C2 /* CaptureTextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA36A50D026656D77AAD21B /* CaptureTextFieldTests.swift */; };
+		1676E424A11B3F37E8AAF97F /* RFBZlibStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 821B9BC51C664CB50742B161 /* RFBZlibStream.swift */; };
+		16E821C27DE7B190E97545C3 /* RFBPerformanceModeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A74870939EED50646B885E22 /* RFBPerformanceModeTests.swift */; };
 		2008FC357BB92B7F1DC1C2C5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 004F8BBA2A7BA01CADFB60DA /* ContentView.swift */; };
 		35641C1FEF823350FA474263 /* RFBFrameBufferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D1C1FF9F445F8F8F06E367A /* RFBFrameBufferTests.swift */; };
 		3C571B25A2781CD30C626E2E /* VNCAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C71D4FD2FA007B964E4A9 /* VNCAuthentication.swift */; };
 		57DB6FF9DF8D5E3C3368EF66 /* DESTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB3E8E09424C553E0A1435E9 /* DESTests.swift */; };
+		5A10C8A7DFCC14A2356C4FB6 /* TightDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43C9F0FF80B4A948083BA3AB /* TightDecoder.swift */; };
 		5DA9592803A770CB706219CB /* DES.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B67B09FDD7053744169B6B /* DES.swift */; };
 		601606CB88158BDD9ADF6A66 /* RFBClientIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F4E5DF266F59808E1952A2D /* RFBClientIntegrationTests.swift */; };
 		6446515774A6F32F7B4AAFD5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0BE99B49E75E442DC9D2843A /* Assets.xcassets */; };
+		734B7DF2735297A08A499DEB /* RFBPerformanceMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151C3900F0792C0D838C0EE8 /* RFBPerformanceMode.swift */; };
 		75C771EED84A6C9329348FD3 /* ByteCodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAB80EF0F13635B3FE203890 /* ByteCodingTests.swift */; };
 		79BC3CDE23766FB1E291F272 /* AppleRSAAuthenticationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B03AC33D04CE07C4EDBF49B0 /* AppleRSAAuthenticationTests.swift */; };
 		81ABB51214E3D636DACEA680 /* RFBClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5FE4FB40C7334FA721E997 /* RFBClient.swift */; };
@@ -27,6 +31,7 @@
 		B774F51E32172024F489BD38 /* RFBAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8208F67F19B4562C81DC9A0F /* RFBAuthentication.swift */; };
 		BD933F6DB803552DE96CC8C6 /* RemoteSessionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B8B418CCBBC00437CC9DC4 /* RemoteSessionModel.swift */; };
 		C6102AB21B5FD9EC239D62D5 /* TailVNCApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52BBC07EE8E90FA348124A0E /* TailVNCApp.swift */; };
+		CC7B3CA3503E43B62E8FB839 /* TightDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3069EB620747B2BA6579460 /* TightDecoderTests.swift */; };
 		DBC9C6DF4259287D57241F84 /* RemoteDesktopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE9597F82DE878B0C5675C64 /* RemoteDesktopView.swift */; };
 		EB7D80AB70A0689FBC918D58 /* ConnectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76CE8BDF15E7EAAFE1F60BE7 /* ConnectionView.swift */; };
 		EF6F6287EFBCF51504C7EA53 /* AppleRSAAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA21A53FD05C67736258228E /* AppleRSAAuthentication.swift */; };
@@ -53,7 +58,9 @@
 		004F8BBA2A7BA01CADFB60DA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		0BAFFDFEEB136CBFCD7AD898 /* TailVNC.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = TailVNC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BE99B49E75E442DC9D2843A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		151C3900F0792C0D838C0EE8 /* RFBPerformanceMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RFBPerformanceMode.swift; sourceTree = "<group>"; };
 		26B8B418CCBBC00437CC9DC4 /* RemoteSessionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSessionModel.swift; sourceTree = "<group>"; };
+		43C9F0FF80B4A948083BA3AB /* TightDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TightDecoder.swift; sourceTree = "<group>"; };
 		4D1C1FF9F445F8F8F06E367A /* RFBFrameBufferTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RFBFrameBufferTests.swift; sourceTree = "<group>"; };
 		52726E8FD69C0E327D6F1A36 /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
 		52BBC07EE8E90FA348124A0E /* TailVNCApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TailVNCApp.swift; sourceTree = "<group>"; };
@@ -63,13 +70,16 @@
 		7CA36A50D026656D77AAD21B /* CaptureTextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureTextFieldTests.swift; sourceTree = "<group>"; };
 		7F4E5DF266F59808E1952A2D /* RFBClientIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RFBClientIntegrationTests.swift; sourceTree = "<group>"; };
 		8208F67F19B4562C81DC9A0F /* RFBAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RFBAuthentication.swift; sourceTree = "<group>"; };
+		821B9BC51C664CB50742B161 /* RFBZlibStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RFBZlibStream.swift; sourceTree = "<group>"; };
 		8B5C71D4FD2FA007B964E4A9 /* VNCAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VNCAuthentication.swift; sourceTree = "<group>"; };
+		A74870939EED50646B885E22 /* RFBPerformanceModeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RFBPerformanceModeTests.swift; sourceTree = "<group>"; };
 		B03AC33D04CE07C4EDBF49B0 /* AppleRSAAuthenticationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleRSAAuthenticationTests.swift; sourceTree = "<group>"; };
 		B75A0BEA2C2BB0DFFA863AF2 /* BridgingHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BridgingHeader.h; sourceTree = "<group>"; };
 		C8B67B09FDD7053744169B6B /* DES.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DES.swift; sourceTree = "<group>"; };
 		CA21A53FD05C67736258228E /* AppleRSAAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleRSAAuthentication.swift; sourceTree = "<group>"; };
 		CAB80EF0F13635B3FE203890 /* ByteCodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ByteCodingTests.swift; sourceTree = "<group>"; };
 		CED836C6497F6773B365F98B /* RFBFrameBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RFBFrameBuffer.swift; sourceTree = "<group>"; };
+		D3069EB620747B2BA6579460 /* TightDecoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TightDecoderTests.swift; sourceTree = "<group>"; };
 		EB3E8E09424C553E0A1435E9 /* DESTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DESTests.swift; sourceTree = "<group>"; };
 		ECB1DABE9DD59D8510B22495 /* RemoteKeyboardSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteKeyboardSheet.swift; sourceTree = "<group>"; };
 		EE9597F82DE878B0C5675C64 /* RemoteDesktopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDesktopView.swift; sourceTree = "<group>"; };
@@ -99,6 +109,8 @@
 				5F520322699F85FD52586B33 /* RemoteViewportTests.swift */,
 				7F4E5DF266F59808E1952A2D /* RFBClientIntegrationTests.swift */,
 				4D1C1FF9F445F8F8F06E367A /* RFBFrameBufferTests.swift */,
+				A74870939EED50646B885E22 /* RFBPerformanceModeTests.swift */,
+				D3069EB620747B2BA6579460 /* TightDecoderTests.swift */,
 			);
 			path = TailVNCTests;
 			sourceTree = "<group>";
@@ -134,6 +146,9 @@
 				8208F67F19B4562C81DC9A0F /* RFBAuthentication.swift */,
 				7B5FE4FB40C7334FA721E997 /* RFBClient.swift */,
 				CED836C6497F6773B365F98B /* RFBFrameBuffer.swift */,
+				151C3900F0792C0D838C0EE8 /* RFBPerformanceMode.swift */,
+				821B9BC51C664CB50742B161 /* RFBZlibStream.swift */,
+				43C9F0FF80B4A948083BA3AB /* TightDecoder.swift */,
 				8B5C71D4FD2FA007B964E4A9 /* VNCAuthentication.swift */,
 			);
 			path = Core;
@@ -306,10 +321,13 @@
 				B774F51E32172024F489BD38 /* RFBAuthentication.swift in Sources */,
 				81ABB51214E3D636DACEA680 /* RFBClient.swift in Sources */,
 				88758A72A920A9FA5145A378 /* RFBFrameBuffer.swift in Sources */,
+				734B7DF2735297A08A499DEB /* RFBPerformanceMode.swift in Sources */,
+				1676E424A11B3F37E8AAF97F /* RFBZlibStream.swift in Sources */,
 				DBC9C6DF4259287D57241F84 /* RemoteDesktopView.swift in Sources */,
 				A1C3B38B7E4D991A3B95D091 /* RemoteKeyboardSheet.swift in Sources */,
 				BD933F6DB803552DE96CC8C6 /* RemoteSessionModel.swift in Sources */,
 				C6102AB21B5FD9EC239D62D5 /* TailVNCApp.swift in Sources */,
+				5A10C8A7DFCC14A2356C4FB6 /* TightDecoder.swift in Sources */,
 				3C571B25A2781CD30C626E2E /* VNCAuthentication.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -324,7 +342,9 @@
 				57DB6FF9DF8D5E3C3368EF66 /* DESTests.swift in Sources */,
 				601606CB88158BDD9ADF6A66 /* RFBClientIntegrationTests.swift in Sources */,
 				35641C1FEF823350FA474263 /* RFBFrameBufferTests.swift in Sources */,
+				16E821C27DE7B190E97545C3 /* RFBPerformanceModeTests.swift in Sources */,
 				8D57615DC20DA1B4E13EC7C6 /* RemoteViewportTests.swift in Sources */,
+				CC7B3CA3503E43B62E8FB839 /* TightDecoderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -388,6 +408,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				OTHER_LDFLAGS = "$(inherited) -lz";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sancerio.tailvnc;
 				PRODUCT_NAME = TailVNC;
 				SDKROOT = iphoneos;
@@ -406,6 +427,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				OTHER_LDFLAGS = "$(inherited) -lz";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sancerio.tailvnc;
 				PRODUCT_NAME = TailVNC;
 				SDKROOT = iphoneos;
@@ -449,7 +471,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = FZZ26XMXRC;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -527,7 +549,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = FZZ26XMXRC;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

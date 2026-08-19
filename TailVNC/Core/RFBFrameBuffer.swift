@@ -73,6 +73,41 @@ struct RFBFrameBuffer {
         }
     }
 
+    mutating func applyRGBA(
+        x: Int,
+        y: Int,
+        width rectangleWidth: Int,
+        height rectangleHeight: Int,
+        pixels: Data
+    ) throws {
+        guard x >= 0, y >= 0,
+              rectangleWidth >= 0, rectangleHeight >= 0,
+              x + rectangleWidth <= width,
+              y + rectangleHeight <= height else {
+            throw RFBFrameBufferError.rectangleOutOfBounds
+        }
+        guard pixels.count == rectangleWidth * rectangleHeight * 4 else {
+            throw RFBFrameBufferError.invalidPixelData
+        }
+
+        rgba.withUnsafeMutableBytes { destinationBytes in
+            pixels.withUnsafeBytes { sourceBytes in
+                guard let destination = destinationBytes.bindMemory(to: UInt8.self).baseAddress,
+                      let source = sourceBytes.bindMemory(to: UInt8.self).baseAddress else {
+                    return
+                }
+                let bytesPerRectangleRow = rectangleWidth * 4
+                for row in 0..<rectangleHeight {
+                    let sourceRow = source.advanced(by: row * bytesPerRectangleRow)
+                    let destinationRow = destination.advanced(
+                        by: ((y + row) * width + x) * 4
+                    )
+                    destinationRow.update(from: sourceRow, count: bytesPerRectangleRow)
+                }
+            }
+        }
+    }
+
     func makeImage() -> CGImage? {
         guard let provider = CGDataProvider(data: rgba as CFData) else {
             return nil

@@ -7,7 +7,7 @@ options:
 settings:
   base:
     SWIFT_VERSION: "5.0"
-    CURRENT_PROJECT_VERSION: "8"
+    CURRENT_PROJECT_VERSION: "9"
     MARKETING_VERSION: "1.0"
     CODE_SIGN_STYLE: Automatic
     DEVELOPMENT_TEAM: FZZ26XMXRC
@@ -42,6 +42,7 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.sancerio.tailvnc
         PRODUCT_NAME: TailVNC
         TARGETED_DEVICE_FAMILY: "1,2"
+        OTHER_LDFLAGS: "$(inherited) -lz"
   TailVNCTests:
     type: bundle.unit-test
     platform: iOS

@@ -6,8 +6,11 @@ final class RemoteSessionModel: ObservableObject {
     @Published private(set) var status: RFBConnectionStatus = .idle
     @Published private(set) var frame: CGImage?
     @Published private(set) var remoteSize: CGSize = .zero
+    @Published private(set) var performanceMode: RFBPerformanceMode = .responsive
+    @Published private(set) var inputActivitySequence = 0
 
     private var client: RFBClient?
+    private var pointerWasPressed = false
 
     var isSessionVisible: Bool {
         switch status {
@@ -80,7 +83,12 @@ final class RemoteSessionModel: ObservableObject {
             self?.remoteSize = size
         }
         self.client = client
-        client.connect(host: host, port: port, authentication: authentication)
+        client.connect(
+            host: host,
+            port: port,
+            authentication: authentication,
+            performanceMode: performanceMode
+        )
     }
 
     func disconnect() {
@@ -88,6 +96,7 @@ final class RemoteSessionModel: ObservableObject {
         client = nil
         frame = nil
         remoteSize = .zero
+        pointerWasPressed = false
         status = .disconnected
     }
 
@@ -100,19 +109,34 @@ final class RemoteSessionModel: ObservableObject {
     }
 
     func sendPointer(x: UInt16, y: UInt16, pressed: Bool) {
+        if pressed && !pointerWasPressed {
+            markInputActivity()
+        }
+        pointerWasPressed = pressed
         client?.sendPointer(x: x, y: y, buttonMask: pressed ? 1 : 0)
     }
 
     func scroll(up: Bool) {
+        markInputActivity()
         client?.sendScroll(up: up)
     }
 
     func sendText(_ text: String) {
+        if !text.isEmpty {
+            markInputActivity()
+        }
         client?.sendText(text)
     }
 
     func sendKey(_ keysym: UInt32) {
+        markInputActivity()
         client?.sendKey(keysym)
+    }
+
+    func setPerformanceMode(_ mode: RFBPerformanceMode) {
+        guard performanceMode != mode else { return }
+        performanceMode = mode
+        client?.setPerformanceMode(mode)
     }
 
     func refreshScreen() {
@@ -133,5 +157,9 @@ final class RemoteSessionModel: ObservableObject {
 
     private static func endpoint(host: String, port: UInt16) -> String {
         "\(host.lowercased()):\(port)"
+    }
+
+    private func markInputActivity() {
+        inputActivitySequence &+= 1
     }
 }

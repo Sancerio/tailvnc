@@ -11,6 +11,7 @@ struct RemoteDesktopView: View {
     @State private var panStartOffset: CGSize?
     @State private var isMagnifying = false
     @State private var lastRemotePointer: (x: UInt16, y: UInt16)?
+    @State private var inputFeedbackVisible = false
 
     var body: some View {
         ZStack {
@@ -39,6 +40,17 @@ struct RemoteDesktopView: View {
             keyboardActive = false
             resetZoom()
         }
+        .onChange(of: session.inputActivitySequence) { _, sequence in
+            withAnimation(.easeOut(duration: 0.12)) {
+                inputFeedbackVisible = true
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.55) {
+                guard session.inputActivitySequence == sequence else { return }
+                withAnimation(.easeOut(duration: 0.18)) {
+                    inputFeedbackVisible = false
+                }
+            }
+        }
     }
 
     private func remoteImage(_ image: CGImage) -> some View {
@@ -53,7 +65,7 @@ struct RemoteDesktopView: View {
             ZStack {
                 Image(decorative: image, scale: 1)
                     .resizable()
-                    .interpolation(.high)
+                    .interpolation(session.performanceMode == .responsive ? .low : .high)
                     .frame(width: transformedRect.width, height: transformedRect.height)
                     .position(x: transformedRect.midX, y: transformedRect.midY)
 
@@ -85,7 +97,7 @@ struct RemoteDesktopView: View {
                 .tint(.cyan)
             Text(session.statusText)
                 .font(.headline)
-            Text("The first raw framebuffer can take a moment on a large display.")
+            Text("Optimizing the first frame for \(session.performanceMode.title.lowercased()) mode…")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
@@ -130,8 +142,17 @@ struct RemoteDesktopView: View {
     private var connectionIndicator: some View {
         HStack(spacing: 7) {
             Circle()
-                .fill(session.frame == nil ? .orange : .green)
+                .fill(inputFeedbackVisible ? .cyan : (session.frame == nil ? .orange : .green))
                 .frame(width: 8, height: 8)
+
+            if inputFeedbackVisible {
+                Image(systemName: "paperplane.fill")
+                    .font(.caption2.weight(.bold))
+                    .foregroundStyle(.cyan)
+                    .transition(.scale.combined(with: .opacity))
+                    .accessibilityLabel("Input sent")
+                    .accessibilityIdentifier("inputFeedbackIndicator")
+            }
 
             if controlsExpanded || session.frame == nil {
                 Text(session.statusText)
@@ -145,6 +166,13 @@ struct RemoteDesktopView: View {
                     .font(.caption2.monospacedDigit().weight(.bold))
                     .foregroundStyle(.cyan)
                     .accessibilityIdentifier("zoomIndicator")
+            }
+
+            if controlsExpanded, session.frame != nil {
+                Image(systemName: session.performanceMode.systemImage)
+                    .font(.caption2.weight(.semibold))
+                    .foregroundStyle(.cyan)
+                    .accessibilityLabel(session.performanceMode.title + " stream quality")
             }
         }
         .padding(controlsExpanded || session.frame == nil ? 10 : 8)
@@ -179,6 +207,8 @@ struct RemoteDesktopView: View {
                 controlButton("Scroll down", systemImage: "arrow.down") {
                     session.scroll(up: false)
                 }
+
+                qualityMenu
 
                 if zoomScale > 1.01 {
                     controlButton("Reset zoom", systemImage: "arrow.counterclockwise") {
@@ -216,6 +246,31 @@ struct RemoteDesktopView: View {
             RoundedRectangle(cornerRadius: 26, style: .continuous)
                 .stroke(.white.opacity(0.12), lineWidth: 0.5)
         }
+    }
+
+    private var qualityMenu: some View {
+        Menu {
+            ForEach(RFBPerformanceMode.allCases) { mode in
+                Button {
+                    session.setPerformanceMode(mode)
+                } label: {
+                    Label {
+                        Text(mode.title + (mode == session.performanceMode ? " — Selected" : ""))
+                        Text(mode.detail)
+                    } icon: {
+                        Image(systemName: mode.systemImage)
+                    }
+                }
+            }
+        } label: {
+            Image(systemName: session.performanceMode.systemImage)
+                .frame(width: 44, height: 44)
+                .contentShape(Circle())
+        }
+        .menuStyle(.button)
+        .buttonStyle(.plain)
+        .accessibilityLabel("Stream quality, \(session.performanceMode.title)")
+        .accessibilityIdentifier("qualityMenu")
     }
 
     private func controlButton(

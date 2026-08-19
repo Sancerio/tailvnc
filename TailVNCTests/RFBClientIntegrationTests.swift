@@ -6,7 +6,7 @@ import XCTest
 @testable import TailVNC
 
 final class RFBClientIntegrationTests: XCTestCase {
-    func testNegotiatesVNCAuthenticationAndReceivesRawFrame() async throws {
+    func testNegotiatesVNCAuthenticationAndReceivesTightFrame() async throws {
         let server = try MockRFBServer(authentication: .vnc(password: "testpass"))
         let port = try await server.start()
         defer { server.stop() }
@@ -44,7 +44,7 @@ final class RFBClientIntegrationTests: XCTestCase {
         client.disconnect()
     }
 
-    func testNegotiatesAppleAccountAuthenticationAndReceivesRawFrame() async throws {
+    func testNegotiatesAppleAccountAuthenticationAndReceivesTightFrame() async throws {
         let server = try MockRFBServer(
             authentication: .apple(username: "mac-user", password: "mac-password")
         )
@@ -229,8 +229,14 @@ private final class MockRFBServer: @unchecked Sendable {
 
         let setPixelFormat = try await receiveExactly(20, from: connection)
         XCTAssertEqual(setPixelFormat[0], 0)
-        let setEncodings = try await receiveExactly(12, from: connection)
-        XCTAssertEqual(setEncodings[0], 2)
+        let setEncodingsHeader = try await receiveExactly(4, from: connection)
+        XCTAssertEqual(setEncodingsHeader[0], 2)
+        let encodingCount = Int(try setEncodingsHeader.uint16BE(at: 2))
+        let setEncodingsBody = try await receiveExactly(encodingCount * 4, from: connection)
+        let encodings = try (0..<encodingCount).map { index in
+            Int32(bitPattern: try setEncodingsBody.uint32BE(at: index * 4))
+        }
+        XCTAssertEqual(encodings, RFBPerformanceMode.responsive.orderedEncodings)
         let initialRequest = try await receiveExactly(10, from: connection)
         XCTAssertEqual(initialRequest.prefix(2), Data([3, 0]))
 
@@ -240,13 +246,9 @@ private final class MockRFBServer: @unchecked Sendable {
         update.appendUInt16BE(0)
         update.appendUInt16BE(2)
         update.appendUInt16BE(2)
-        update.appendInt32BE(0)
-        update.append(contentsOf: [
-            0, 0, 255, 0,
-            0, 255, 0, 0,
-            255, 0, 0, 0,
-            255, 255, 255, 0,
-        ])
+        update.appendInt32BE(7)
+        update.append(0x80)
+        update.append(contentsOf: [255, 0, 0])
         try await send(update, over: connection)
 
         let incrementalRequest = try await receiveExactly(10, from: connection)

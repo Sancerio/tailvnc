@@ -61,13 +61,21 @@ final class RFBClient: @unchecked Sendable {
     private var connection: NWConnection?
     private var sessionTask: Task<Void, Never>?
     private var framebuffer: RFBFrameBuffer?
+    private var tightDecoder: TightDecoder?
+    private var performanceMode: RFBPerformanceMode = .responsive
     private var remoteWidth: UInt16 = 0
     private var remoteHeight: UInt16 = 0
     private var lastPointerX: UInt16 = 0
     private var lastPointerY: UInt16 = 0
 
-    func connect(host: String, port: UInt16, authentication: RFBAuthentication) {
+    func connect(
+        host: String,
+        port: UInt16,
+        authentication: RFBAuthentication,
+        performanceMode: RFBPerformanceMode = .responsive
+    ) {
         disconnect(notify: false)
+        self.performanceMode = performanceMode
         publish(.connecting)
         sessionTask = Task { [weak self] in
             guard let self else { return }
@@ -92,6 +100,7 @@ final class RFBClient: @unchecked Sendable {
         connection?.cancel()
         connection = nil
         framebuffer = nil
+        tightDecoder = nil
         if notify {
             publish(.disconnected)
         }
@@ -140,6 +149,19 @@ final class RFBClient: @unchecked Sendable {
         message.appendUInt16BE(remoteWidth)
         message.appendUInt16BE(remoteHeight)
         enqueueInputMessage(message)
+    }
+
+    func setPerformanceMode(_ mode: RFBPerformanceMode) {
+        performanceMode = mode
+        guard remoteWidth > 0, remoteHeight > 0 else { return }
+
+        var messages = Self.encodingsMessage(for: mode)
+        messages.append(Self.framebufferRequest(
+            incremental: false,
+            width: remoteWidth,
+            height: remoteHeight
+        ))
+        enqueueInputMessage(messages)
     }
 
     private func enqueueInputMessage(_ message: Data) {
@@ -226,6 +248,7 @@ final class RFBClient: @unchecked Sendable {
         lastPointerX = UInt16(width / 2)
         lastPointerY = UInt16(height / 2)
         framebuffer = try RFBFrameBuffer(width: width, height: height)
+        tightDecoder = try TightDecoder()
 
         try await sendPixelFormat()
         try await sendEncodings()
@@ -349,20 +372,15 @@ final class RFBClient: @unchecked Sendable {
     }
 
     private func sendEncodings() async throws {
-        var message = Data([2, 0])
-        message.appendUInt16BE(2)
-        message.appendInt32BE(0)
-        message.appendInt32BE(-223)
-        try await send(message)
+        try await send(Self.encodingsMessage(for: performanceMode))
     }
 
     private func requestFramebufferUpdate(incremental: Bool) async throws {
-        var message = Data([3, incremental ? 1 : 0])
-        message.appendUInt16BE(0)
-        message.appendUInt16BE(0)
-        message.appendUInt16BE(remoteWidth)
-        message.appendUInt16BE(remoteHeight)
-        try await send(message)
+        try await send(Self.framebufferRequest(
+            incremental: incremental,
+            width: remoteWidth,
+            height: remoteHeight
+        ))
     }
 
     private func receiveServerMessage() async throws {
@@ -412,6 +430,27 @@ final class RFBClient: @unchecked Sendable {
                     height: height,
                     pixels: pixels
                 )
+            case 7:
+                guard let tightDecoder else {
+                    throw RFBClientError.malformedMessage
+                }
+                let pixels = try await tightDecoder.decodeRectangle(
+                    width: width,
+                    height: height,
+                    readExactly: { [weak self] count in
+                        guard let self else {
+                            throw RFBClientError.unexpectedEndOfStream
+                        }
+                        return try await self.receiveExactly(count)
+                    }
+                )
+                try framebuffer?.applyRGBA(
+                    x: x,
+                    y: y,
+                    width: width,
+                    height: height,
+                    pixels: pixels
+                )
             case -223:
                 remoteWidth = UInt16(width)
                 remoteHeight = UInt16(height)
@@ -428,6 +467,28 @@ final class RFBClient: @unchecked Sendable {
             }
         }
         try await requestFramebufferUpdate(incremental: true)
+    }
+
+    private static func encodingsMessage(for mode: RFBPerformanceMode) -> Data {
+        var message = Data([2, 0])
+        message.appendUInt16BE(UInt16(mode.orderedEncodings.count))
+        for encoding in mode.orderedEncodings {
+            message.appendInt32BE(encoding)
+        }
+        return message
+    }
+
+    private static func framebufferRequest(
+        incremental: Bool,
+        width: UInt16,
+        height: UInt16
+    ) -> Data {
+        var message = Data([3, incremental ? 1 : 0])
+        message.appendUInt16BE(0)
+        message.appendUInt16BE(0)
+        message.appendUInt16BE(width)
+        message.appendUInt16BE(height)
+        return message
     }
 
     private func discardColorMap() async throws {

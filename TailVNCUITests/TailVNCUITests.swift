@@ -31,6 +31,7 @@ final class TailVNCUITests: XCTestCase {
         XCTAssertTrue(zoomIndicator.waitForExistence(timeout: 2))
 
         app.buttons["controlsToggleButton"].tap()
+        XCTAssertTrue(app.buttons["qualityMenu"].waitForExistence(timeout: 2))
         let resetZoom = app.buttons["resetZoomButton"]
         XCTAssertTrue(resetZoom.waitForExistence(timeout: 2))
         resetZoom.tap()
