@@ -1,12 +1,13 @@
 import CoreGraphics
 import Foundation
 import Network
+import Security
 import XCTest
 @testable import TailVNC
 
 final class RFBClientIntegrationTests: XCTestCase {
     func testNegotiatesVNCAuthenticationAndReceivesRawFrame() async throws {
-        let server = try MockRFBServer(password: "testpass")
+        let server = try MockRFBServer(authentication: .vnc(password: "testpass"))
         let port = try await server.start()
         defer { server.stop() }
 
@@ -33,15 +34,56 @@ final class RFBClientIntegrationTests: XCTestCase {
             frameReceived.fulfill()
         }
 
-        client.connect(host: "127.0.0.1", port: port, password: "testpass")
+        client.connect(
+            host: "127.0.0.1",
+            port: port,
+            authentication: .vncPassword("testpass")
+        )
+        await fulfillment(of: [connected, frameReceived], timeout: 5)
+        try await server.waitUntilComplete()
+        client.disconnect()
+    }
+
+    func testNegotiatesAppleAccountAuthenticationAndReceivesRawFrame() async throws {
+        let server = try MockRFBServer(
+            authentication: .apple(username: "mac-user", password: "mac-password")
+        )
+        let port = try await server.start()
+        defer { server.stop() }
+
+        let connected = expectation(description: "connected")
+        let frameReceived = expectation(description: "frame received")
+        let client = RFBClient()
+        client.onStatus = { status in
+            if case .connected = status { connected.fulfill() }
+        }
+        client.onFrame = { _, _ in
+            client.sendPointer(x: 1, y: 1, buttonMask: 1)
+            client.sendPointer(x: 1, y: 1, buttonMask: 0)
+            client.sendKey(0xff0d)
+            client.requestFullRefresh()
+            frameReceived.fulfill()
+        }
+
+        client.connect(
+            host: "127.0.0.1",
+            port: port,
+            authentication: .macAccount(username: "mac-user", password: "mac-password")
+        )
         await fulfillment(of: [connected, frameReceived], timeout: 5)
         try await server.waitUntilComplete()
         client.disconnect()
     }
 }
 
+private enum MockAuthentication {
+    case vnc(password: String)
+    case apple(username: String, password: String)
+}
+
 private final class MockRFBServer: @unchecked Sendable {
-    private let password: String
+    private let authentication: MockAuthentication
+    private let applePrivateKey: SecKey?
     private let queue = DispatchQueue(label: "com.sancerio.tailvnc.tests.mock-rfb")
     private let listener: NWListener
     private var connection: NWConnection?
@@ -50,8 +92,21 @@ private final class MockRFBServer: @unchecked Sendable {
     private var completionWaiters: [CheckedContinuation<Void, Error>] = []
     private let lock = NSLock()
 
-    init(password: String) throws {
-        self.password = password
+    init(authentication: MockAuthentication) throws {
+        self.authentication = authentication
+        if case .apple = authentication {
+            let attributes: [String: Any] = [
+                kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
+                kSecAttrKeySizeInBits as String: 2_048
+            ]
+            var error: Unmanaged<CFError>?
+            guard let key = SecKeyCreateRandomKey(attributes as CFDictionary, &error) else {
+                throw error?.takeRetainedValue() ?? MockRFBError.keyGeneration
+            }
+            self.applePrivateKey = key
+        } else {
+            self.applePrivateKey = nil
+        }
         self.listener = try NWListener(using: .tcp, on: .any)
     }
 
@@ -127,16 +182,33 @@ private final class MockRFBServer: @unchecked Sendable {
     private func run(_ connection: NWConnection) async throws {
         try await send(Data("RFB 003.889\n".utf8), over: connection)
         let clientGreeting = try await receiveExactly(12, from: connection)
-        XCTAssertEqual(clientGreeting, Data("RFB 003.008\n".utf8))
+        switch authentication {
+        case .vnc(let password):
+            XCTAssertEqual(clientGreeting, Data("RFB 003.008\n".utf8))
+            try await send(Data([1, 2]), over: connection)
+            let selectedSecurityType = try await receiveExactly(1, from: connection)
+            XCTAssertEqual(selectedSecurityType, Data([2]))
 
-        try await send(Data([1, 2]), over: connection)
-        let selectedSecurityType = try await receiveExactly(1, from: connection)
-        XCTAssertEqual(selectedSecurityType, Data([2]))
+            let challenge = Data((0..<16).map(UInt8.init))
+            try await send(challenge, over: connection)
+            let response = try await receiveExactly(16, from: connection)
+            XCTAssertEqual(
+                response,
+                try VNCAuthentication.response(challenge: challenge, password: password)
+            )
 
-        let challenge = Data((0..<16).map(UInt8.init))
-        try await send(challenge, over: connection)
-        let response = try await receiveExactly(16, from: connection)
-        XCTAssertEqual(response, try VNCAuthentication.response(challenge: challenge, password: password))
+        case .apple(let username, let password):
+            XCTAssertEqual(clientGreeting, Data("RFB 003.889\n".utf8))
+            try await send(Data([2, 2, AppleRSAAuthentication.securityType]), over: connection)
+            let selectionAndRequest = try await receiveExactly(15, from: connection)
+            XCTAssertEqual(selectionAndRequest.first, AppleRSAAuthentication.securityType)
+            XCTAssertEqual(Data(selectionAndRequest.dropFirst()), AppleRSAAuthentication.keyRequest)
+            try await performAppleHandshake(
+                username: username,
+                password: password,
+                connection: connection
+            )
+        }
 
         try await send(Data([0, 0, 0, 0]), over: connection)
         let clientInit = try await receiveExactly(1, from: connection)
@@ -194,6 +266,81 @@ private final class MockRFBServer: @unchecked Sendable {
         XCTAssertEqual(fullRefresh.prefix(2), Data([3, 0]))
     }
 
+    private func performAppleHandshake(
+        username: String,
+        password: String,
+        connection: NWConnection
+    ) async throws {
+        let privateKey = try XCTUnwrap(applePrivateKey)
+        let publicKey = try XCTUnwrap(SecKeyCopyPublicKey(privateKey))
+        var keyError: Unmanaged<CFError>?
+        let pkcs1 = try XCTUnwrap(
+            SecKeyCopyExternalRepresentation(publicKey, &keyError) as Data?,
+            keyError?.takeRetainedValue().localizedDescription ?? "Missing public key"
+        )
+        let spki = subjectPublicKeyInfo(wrapping: pkcs1)
+        var keyPacket = Data([0, 1])
+        keyPacket.appendUInt32BE(UInt32(spki.count))
+        keyPacket.append(spki)
+        keyPacket.append(0)
+        var framedKeyPacket = Data()
+        framedKeyPacket.appendUInt32BE(UInt32(keyPacket.count))
+        framedKeyPacket.append(keyPacket)
+        try await send(framedKeyPacket, over: connection)
+
+        let responseLength = Int(try await receiveExactly(4, from: connection).uint32BE(at: 0))
+        let response = try await receiveExactly(responseLength, from: connection)
+        XCTAssertEqual(response[0..<8], Data([1, 0]) + Data("RSA1".utf8) + Data([0, 1]))
+        XCTAssertEqual(response[136..<138], Data([0, 1]))
+
+        let encryptedKey = Data(response[138...])
+        let aesKey = try XCTUnwrap(
+            SecKeyCreateDecryptedData(
+                privateKey,
+                .rsaEncryptionPKCS1,
+                encryptedKey as CFData,
+                &keyError
+            ) as Data?,
+            keyError?.takeRetainedValue().localizedDescription ?? "Unable to decrypt AES key"
+        )
+        let credentials = try AppleRSAAuthentication.decryptCredentialsForTesting(
+            Data(response[8..<136]),
+            aesKey: aesKey
+        )
+        XCTAssertEqual(nullTerminatedString(Data(credentials[0..<64])), username)
+        XCTAssertEqual(nullTerminatedString(Data(credentials[64..<128])), password)
+
+        try await send(Data(repeating: 0, count: 4), over: connection)
+    }
+
+    private func nullTerminatedString(_ data: Data) -> String {
+        let content = data.prefix { $0 != 0 }
+        return String(decoding: content, as: UTF8.self)
+    }
+
+    private func subjectPublicKeyInfo(wrapping pkcs1: Data) -> Data {
+        let algorithm = Data([
+            0x30, 0x0d,
+            0x06, 0x09, 0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x01,
+            0x05, 0x00
+        ])
+        return der(tag: 0x30, value: algorithm + der(tag: 0x03, value: Data([0]) + pkcs1))
+    }
+
+    private func der(tag: UInt8, value: Data) -> Data {
+        var result = Data([tag])
+        if value.count < 128 {
+            result.append(UInt8(value.count))
+        } else {
+            let bytes = withUnsafeBytes(of: UInt32(value.count).bigEndian) { Data($0) }
+                .drop(while: { $0 == 0 })
+            result.append(0x80 | UInt8(bytes.count))
+            result.append(contentsOf: bytes)
+        }
+        result.append(value)
+        return result
+    }
+
     private func receiveExactly(_ count: Int, from connection: NWConnection) async throws -> Data {
         var data = Data()
         while data.count < count {
@@ -231,6 +378,7 @@ private final class MockRFBServer: @unchecked Sendable {
 
 private enum MockRFBError: Error {
     case closed
+    case keyGeneration
 }
 
 private final class TestContinuationGate: @unchecked Sendable {

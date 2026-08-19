@@ -11,12 +11,13 @@ The app speaks the Remote Framebuffer (RFB) protocol directly to the server.
 
 TailVNC is an early MVP. It currently targets the smallest useful feature set:
 
-- RFB 3.8 negotiation, including Apple's `RFB 003.889` greeting
-- standard VNC challenge-response authentication
+- RFB 3.8 negotiation plus Apple's `RFB 003.889` account-authentication path
+- Apple RSA/AES Mac account authentication (security type 33)
+- standard VNC challenge-response authentication as a legacy fallback
 - raw framebuffer updates in 32-bit true color
 - touch pointer input, dragging, scrolling, pinch-to-zoom (up to 4×), and panning
 - software and hardware keyboard input for common keys
-- optional password storage in the iOS Keychain
+- optional credential storage in the iOS Keychain
 - direct host, MagicDNS name, or IP address connections
 
 The first release intentionally supports only raw framebuffer encoding. It is
@@ -28,11 +29,14 @@ Classic VNC does not encrypt the framebuffer stream. TailVNC should only be
 used inside a trusted encrypted tunnel such as Tailscale, WireGuard, or an SSH
 tunnel. Never expose TCP port 5900 directly to the public internet.
 
-Standard VNC authentication uses only the first eight password bytes. Use a
-unique VNC password and treat the private network tunnel as the primary
-security boundary. TailVNC stores a remembered password with
+Mac Login encrypts the username and password during authentication, but it
+does not encrypt the later framebuffer session or independently verify the
+Mac's public key. Treat the private network tunnel as the primary security
+boundary. Standard VNC authentication uses only the first eight password
+bytes and cannot log in to a locked macOS account. TailVNC stores remembered
+credentials with
 `kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly`; it does not sync the
-password through iCloud.
+credentials through iCloud.
 
 See [SECURITY.md](SECURITY.md) for the security policy and current limitations.
 
@@ -42,8 +46,9 @@ See [SECURITY.md](SECURITY.md) for the security policy and current limitations.
 2. On the Mac, open **System Settings → General → Sharing**.
 3. Turn on **Screen Sharing**.
 4. Open its details and keep **Allow access for** limited to the intended users.
-5. Enable **VNC viewers may control screen with password** and create a unique
-   password.
+5. Use TailVNC's recommended **Mac Login** mode with an allowed macOS account.
+   Only enable **VNC viewers may control screen with password** if you need the
+   legacy compatibility mode; it cannot unlock the Mac login screen.
 6. Do not forward port 5900 on the router.
 
 In TailVNC, connect to the Mac's Tailscale IP (usually `100.x.x.x`) or its
@@ -69,9 +74,10 @@ xcodebuild \
 ```
 
 The test suite includes a local mock RFB server that verifies protocol
-negotiation, VNC authentication, raw framebuffer delivery, and the next
-incremental update request end to end. GitHub Actions also runs the unit,
-protocol integration, and UI tests on every push and pull request.
+negotiation, Apple RSA/AES account authentication, legacy VNC authentication,
+raw framebuffer delivery, and the next incremental update request end to end.
+GitHub Actions also runs the unit, protocol integration, and UI tests on every
+push and pull request.
 
 To run on a physical iPhone, open `TailVNC.xcodeproj`, select your Apple
 development team for the TailVNC target, and run it on the connected device.
@@ -80,7 +86,9 @@ development team for the TailVNC target, and run it on the connected device.
 
 - `RFBClient` owns the TCP connection and protocol state machine.
 - `VNCAuthentication` implements the standard DES challenge response in pure
-  Swift, keeping the project dependency-free.
+  Swift.
+- `AppleRSAAuthentication` implements macOS security type 33 using Security
+  and CommonCrypto system frameworks.
 - `RFBFrameBuffer` applies raw rectangles and emits RGBA `CGImage` frames.
 - SwiftUI views provide connection setup and remote input controls.
 - `KeychainStore` is the only persistence layer for credentials.

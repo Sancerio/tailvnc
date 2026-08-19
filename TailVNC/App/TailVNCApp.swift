@@ -7,6 +7,8 @@ struct TailVNCApp: App {
             UserDefaults.standard.removeObject(forKey: "lastHost")
             UserDefaults.standard.removeObject(forKey: "lastPort")
             UserDefaults.standard.removeObject(forKey: "rememberPassword")
+            UserDefaults.standard.removeObject(forKey: "authenticationMode")
+            UserDefaults.standard.removeObject(forKey: "lastMacUsername")
         }
     }
 

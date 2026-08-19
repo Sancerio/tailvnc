@@ -5,14 +5,27 @@ struct ConnectionView: View {
 
     @AppStorage("lastHost") private var host = ""
     @AppStorage("lastPort") private var portText = "5900"
+    @AppStorage("authenticationMode") private var authenticationMode = AuthenticationMode.macAccount.rawValue
+    @AppStorage("lastMacUsername") private var macUsername = ""
     @AppStorage("rememberPassword") private var rememberPassword = true
-    @State private var password = ""
+    @State private var macPassword = ""
+    @State private var vncPassword = ""
     @FocusState private var focusedField: Field?
+
+    private enum AuthenticationMode: String, CaseIterable, Identifiable {
+        case macAccount
+        case vncPassword
+
+        var id: String { rawValue }
+        var title: String { self == .macAccount ? "Mac Login" : "VNC Password" }
+    }
 
     private enum Field {
         case host
         case port
-        case password
+        case macUsername
+        case macPassword
+        case vncPassword
     }
 
     private var parsedPort: UInt16? {
@@ -20,9 +33,17 @@ struct ConnectionView: View {
     }
 
     private var canConnect: Bool {
-        !host.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-            && parsedPort != nil
-            && !password.isEmpty
+        guard !host.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+              parsedPort != nil else { return false }
+        if selectedAuthenticationMode == .macAccount {
+            return !macUsername.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                && !macPassword.isEmpty
+        }
+        return !vncPassword.isEmpty
+    }
+
+    private var selectedAuthenticationMode: AuthenticationMode {
+        AuthenticationMode(rawValue: authenticationMode) ?? .macAccount
     }
 
     var body: some View {
@@ -39,9 +60,10 @@ struct ConnectionView: View {
             .background(background)
             .navigationTitle("TailVNC")
             .navigationBarTitleDisplayMode(.inline)
-            .onAppear(perform: loadSavedPassword)
-            .onChange(of: host) { _, _ in loadSavedPassword() }
-            .onChange(of: portText) { _, _ in loadSavedPassword() }
+            .onAppear(perform: loadSavedCredentials)
+            .onChange(of: host) { _, _ in loadSavedCredentials() }
+            .onChange(of: portText) { _, _ in loadSavedCredentials() }
+            .onChange(of: authenticationMode) { _, _ in loadSavedCredentials() }
         }
     }
 
@@ -83,11 +105,41 @@ struct ConnectionView: View {
 
             Divider()
 
-            labeledField("VNC password", systemImage: "key.fill") {
-                SecureField("Required", text: $password)
-                    .textContentType(.password)
-                    .focused($focusedField, equals: .password)
-                    .accessibilityIdentifier("passwordField")
+            Picker("Authentication", selection: $authenticationMode) {
+                ForEach(AuthenticationMode.allCases) { mode in
+                    Text(mode.title).tag(mode.rawValue)
+                }
+            }
+            .pickerStyle(.segmented)
+            .accessibilityIdentifier("authenticationPicker")
+
+            Divider()
+
+            if selectedAuthenticationMode == .macAccount {
+                labeledField("Mac username", systemImage: "person.fill") {
+                    TextField("Account short name", text: $macUsername)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
+                        .textContentType(.username)
+                        .focused($focusedField, equals: .macUsername)
+                        .accessibilityIdentifier("usernameField")
+                }
+
+                Divider()
+
+                labeledField("Mac password", systemImage: "key.fill") {
+                    SecureField("Mac login password", text: $macPassword)
+                        .textContentType(.password)
+                        .focused($focusedField, equals: .macPassword)
+                        .accessibilityIdentifier("macPasswordField")
+                }
+            } else {
+                labeledField("VNC password", systemImage: "key.fill") {
+                    SecureField("VNC-only password", text: $vncPassword)
+                        .textContentType(.password)
+                        .focused($focusedField, equals: .vncPassword)
+                        .accessibilityIdentifier("vncPasswordField")
+                }
             }
 
             Toggle("Remember in Keychain", isOn: $rememberPassword)
@@ -97,11 +149,20 @@ struct ConnectionView: View {
             Button {
                 guard let port = parsedPort else { return }
                 focusedField = nil
+                let authentication: RFBAuthentication
+                if selectedAuthenticationMode == .macAccount {
+                    authentication = .macAccount(
+                        username: macUsername.trimmingCharacters(in: .whitespacesAndNewlines),
+                        password: macPassword
+                    )
+                } else {
+                    authentication = .vncPassword(vncPassword)
+                }
                 session.connect(
                     host: host.trimmingCharacters(in: .whitespacesAndNewlines),
                     port: port,
-                    password: password,
-                    rememberPassword: rememberPassword
+                    authentication: authentication,
+                    rememberCredentials: rememberPassword
                 )
             } label: {
                 Label("Connect", systemImage: "arrow.right.circle.fill")
@@ -131,7 +192,11 @@ struct ConnectionView: View {
 
     private var securityNote: some View {
         Label {
-            Text("Classic VNC is not encrypted. Keep port 5900 private and connect through Tailscale, WireGuard, or SSH.")
+            if selectedAuthenticationMode == .macAccount {
+                Text("Mac Login encrypts your account credentials. Keep the framebuffer private with Tailscale, WireGuard, or SSH.")
+            } else {
+                Text("VNC Password is legacy compatibility and cannot log in to a locked Mac account. Keep it behind a private tunnel.")
+            }
         } icon: {
             Image(systemName: "lock.shield.fill")
                 .foregroundStyle(.green)
@@ -172,8 +237,17 @@ struct ConnectionView: View {
         }
     }
 
-    private func loadSavedPassword() {
+    private func loadSavedCredentials() {
         guard rememberPassword, let port = parsedPort, !host.isEmpty else { return }
-        password = session.savedPassword(host: host, port: port) ?? ""
+        if selectedAuthenticationMode == .macAccount {
+            if let credentials = session.savedMacCredentials(host: host, port: port) {
+                macUsername = credentials.username
+                macPassword = credentials.password
+            } else {
+                macPassword = ""
+            }
+        } else {
+            vncPassword = session.savedPassword(host: host, port: port) ?? ""
+        }
     }
 }

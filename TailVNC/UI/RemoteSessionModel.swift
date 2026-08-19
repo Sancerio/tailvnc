@@ -44,12 +44,29 @@ final class RemoteSessionModel: ObservableObject {
         return nil
     }
 
-    func connect(host: String, port: UInt16, password: String, rememberPassword: Bool) {
+    func connect(
+        host: String,
+        port: UInt16,
+        authentication: RFBAuthentication,
+        rememberCredentials: Bool
+    ) {
         let endpoint = Self.endpoint(host: host, port: port)
-        if rememberPassword {
-            try? KeychainStore.save(password: password, for: endpoint)
-        } else {
-            KeychainStore.deletePassword(for: endpoint)
+        switch authentication {
+        case .macAccount(let username, let password):
+            if rememberCredentials {
+                try? KeychainStore.save(
+                    macCredentials: MacCredentials(username: username, password: password),
+                    for: endpoint
+                )
+            } else {
+                KeychainStore.deleteMacCredentials(for: endpoint)
+            }
+        case .vncPassword(let password):
+            if rememberCredentials {
+                try? KeychainStore.save(password: password, for: endpoint)
+            } else {
+                KeychainStore.deletePassword(for: endpoint)
+            }
         }
 
         frame = nil
@@ -63,7 +80,7 @@ final class RemoteSessionModel: ObservableObject {
             self?.remoteSize = size
         }
         self.client = client
-        client.connect(host: host, port: port, password: password)
+        client.connect(host: host, port: port, authentication: authentication)
     }
 
     func disconnect() {
@@ -76,6 +93,10 @@ final class RemoteSessionModel: ObservableObject {
 
     func savedPassword(host: String, port: UInt16) -> String? {
         KeychainStore.password(for: Self.endpoint(host: host, port: port))
+    }
+
+    func savedMacCredentials(host: String, port: UInt16) -> MacCredentials? {
+        KeychainStore.macCredentials(for: Self.endpoint(host: host, port: port))
     }
 
     func sendPointer(x: UInt16, y: UInt16, pressed: Bool) {

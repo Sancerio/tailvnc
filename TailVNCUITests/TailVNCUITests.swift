@@ -13,7 +13,8 @@ final class TailVNCUITests: XCTestCase {
         let host = app.textFields["hostField"]
         XCTAssertTrue(host.waitForExistence(timeout: 5))
         XCTAssertTrue(host.value as? String == "100.x.x.x or MagicDNS name" || (host.value as? String)?.isEmpty == true)
-        XCTAssertTrue(app.secureTextFields["passwordField"].exists)
+        XCTAssertTrue(app.textFields["usernameField"].exists)
+        XCTAssertTrue(app.secureTextFields["macPasswordField"].exists)
         XCTAssertFalse(app.buttons["connectButton"].isEnabled)
     }
 

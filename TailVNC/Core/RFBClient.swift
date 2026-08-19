@@ -19,7 +19,7 @@ enum RFBClientError: LocalizedError {
     case unexpectedEndOfStream
     case invalidProtocolVersion(String)
     case serverRejected(String)
-    case vncAuthenticationUnavailable([UInt8])
+    case authenticationUnavailable(String, [UInt8])
     case authenticationFailed(String)
     case unsupportedServerMessage(UInt8)
     case unsupportedEncoding(Int32)
@@ -39,8 +39,8 @@ enum RFBClientError: LocalizedError {
             return "Unsupported RFB greeting: \(value)"
         case .serverRejected(let reason):
             return "The VNC server rejected the connection: \(reason)"
-        case .vncAuthenticationUnavailable(let types):
-            return "The server does not offer standard VNC authentication (types: \(types))."
+        case .authenticationUnavailable(let method, let types):
+            return "The server does not offer \(method) authentication (types: \(types))."
         case .authenticationFailed(let reason):
             return "VNC authentication failed: \(reason)"
         case .unsupportedServerMessage(let type):
@@ -66,13 +66,13 @@ final class RFBClient: @unchecked Sendable {
     private var lastPointerX: UInt16 = 0
     private var lastPointerY: UInt16 = 0
 
-    func connect(host: String, port: UInt16, password: String) {
+    func connect(host: String, port: UInt16, authentication: RFBAuthentication) {
         disconnect(notify: false)
         publish(.connecting)
         sessionTask = Task { [weak self] in
             guard let self else { return }
             do {
-                try await self.run(host: host, port: port, password: password)
+                try await self.run(host: host, port: port, authentication: authentication)
             } catch is CancellationError {
                 self.publish(.disconnected)
             } catch {
@@ -149,7 +149,7 @@ final class RFBClient: @unchecked Sendable {
         }
     }
 
-    private func run(host: String, port: UInt16, password: String) async throws {
+    private func run(host: String, port: UInt16, authentication: RFBAuthentication) async throws {
         guard !host.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             throw RFBClientError.invalidHost
         }
@@ -167,7 +167,15 @@ final class RFBClient: @unchecked Sendable {
               greeting.hasPrefix("RFB ") else {
             throw RFBClientError.invalidProtocolVersion(String(decoding: greetingData, as: UTF8.self))
         }
-        try await send(Data("RFB 003.008\n".utf8))
+        let isAppleServer = greeting == "RFB 003.889\n"
+        let useAppleAccount: Bool
+        if case .macAccount = authentication {
+            useAppleAccount = isAppleServer
+        } else {
+            useAppleAccount = false
+        }
+        let clientGreeting = useAppleAccount ? "RFB 003.889\n" : "RFB 003.008\n"
+        try await send(Data(clientGreeting.utf8))
 
         let securityCount = Int(try await receiveExactly(1)[0])
         if securityCount == 0 {
@@ -175,15 +183,26 @@ final class RFBClient: @unchecked Sendable {
             throw RFBClientError.serverRejected(reason)
         }
         let securityTypes = Array(try await receiveExactly(securityCount))
-        guard securityTypes.contains(2) else {
-            throw RFBClientError.vncAuthenticationUnavailable(securityTypes)
-        }
-
-        try await send(Data([2]))
         publish(.authenticating)
-        let challenge = try await receiveExactly(16)
-        let response = try VNCAuthentication.response(challenge: challenge, password: password)
-        try await send(response)
+        switch authentication {
+        case .macAccount(let username, let password):
+            guard useAppleAccount, securityTypes.contains(AppleRSAAuthentication.securityType) else {
+                throw RFBClientError.authenticationUnavailable("Mac account", securityTypes)
+            }
+            var selectionAndRequest = Data([AppleRSAAuthentication.securityType])
+            selectionAndRequest.append(AppleRSAAuthentication.keyRequest)
+            try await send(selectionAndRequest)
+            try await performAppleRSAAuthentication(username: username, password: password)
+
+        case .vncPassword(let password):
+            guard securityTypes.contains(2) else {
+                throw RFBClientError.authenticationUnavailable("VNC password", securityTypes)
+            }
+            try await send(Data([2]))
+            let challenge = try await receiveExactly(16)
+            let response = try VNCAuthentication.response(challenge: challenge, password: password)
+            try await send(response)
+        }
 
         let securityResult = try await receiveExactly(4).uint32BE(at: 0)
         guard securityResult == 0 else {
@@ -215,6 +234,30 @@ final class RFBClient: @unchecked Sendable {
 
         while !Task.isCancelled {
             try await receiveServerMessage()
+        }
+    }
+
+    private func performAppleRSAAuthentication(username: String, password: String) async throws {
+        let packetLength = Int(try await receiveExactly(4).uint32BE(at: 0))
+        guard packetLength >= 7, packetLength <= 1_048_576 else {
+            throw RFBClientError.malformedMessage
+        }
+        let packet = try await receiveExactly(packetLength)
+        let keyLength = Int(try packet.uint32BE(at: 2))
+        guard keyLength > 0, 6 + keyLength < packet.count else {
+            throw RFBClientError.malformedMessage
+        }
+        let publicKey = packet.subdata(in: 6..<(6 + keyLength))
+        let response = try AppleRSAAuthentication.response(
+            publicKeyDER: publicKey,
+            username: username,
+            password: password
+        )
+        try await send(response)
+
+        let acknowledgement = try await receiveExactly(4)
+        guard acknowledgement == Data(repeating: 0, count: 4) else {
+            throw RFBClientError.malformedMessage
         }
     }
 
