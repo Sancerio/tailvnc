@@ -36,7 +36,34 @@ final class RemoteViewportTests: XCTestCase {
             available: CGSize(width: 390, height: 844)
         )
 
-        XCTAssertEqual(offset.width, 195, accuracy: 0.001)
+        XCTAssertEqual(offset.width, 251, accuracy: 0.001)
+        XCTAssertEqual(offset.height, 0, accuracy: 0.001)
+    }
+
+    func testPanBoundaryRevealsRemoteEdgeInsideViewport() {
+        let available = CGSize(width: 390, height: 844)
+        let displayRect = CGRect(x: 0, y: 300, width: 390, height: 244)
+        let offset = RemoteViewport.clampedOffset(
+            CGSize(width: 10_000, height: 10_000),
+            displayRect: displayRect,
+            scale: 4,
+            available: available
+        )
+        let transformed = RemoteViewport.transformedRect(displayRect, scale: 4, offset: offset)
+
+        XCTAssertEqual(transformed.minX, RemoteViewport.edgeRevealPadding, accuracy: 0.001)
+        XCTAssertEqual(transformed.minY, RemoteViewport.edgeRevealPadding, accuracy: 0.001)
+    }
+
+    func testLetterboxedAxisDoesNotPanUntilContentExceedsViewport() {
+        let offset = RemoteViewport.clampedOffset(
+            CGSize(width: 10_000, height: 100),
+            displayRect: CGRect(x: 0, y: 300, width: 390, height: 244),
+            scale: 2,
+            available: CGSize(width: 390, height: 844)
+        )
+
+        XCTAssertEqual(offset.width, 251, accuracy: 0.001)
         XCTAssertEqual(offset.height, 0, accuracy: 0.001)
     }
 

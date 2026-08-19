@@ -285,6 +285,7 @@ struct RemoteDesktopView: View {
                           ) else { return }
                     session.sendPointer(x: point.x, y: point.y, pressed: true)
                     session.sendPointer(x: point.x, y: point.y, pressed: false)
+                    refreshAfterClick()
                     return
                 }
 
@@ -295,7 +296,17 @@ struct RemoteDesktopView: View {
                 ) else { return }
                 lastRemotePointer = nil
                 session.sendPointer(x: point.x, y: point.y, pressed: false)
+                let distance = hypot(value.translation.width, value.translation.height)
+                if distance < 8 {
+                    refreshAfterClick()
+                }
             }
+    }
+
+    private func refreshAfterClick() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+            session.refreshScreen()
+        }
     }
 
     private func magnifyGesture(displayRect: CGRect, available: CGSize) -> some Gesture {
@@ -359,6 +370,7 @@ struct RemoteDesktopView: View {
 struct RemoteViewport {
     static let minimumScale: CGFloat = 1
     static let maximumScale: CGFloat = 4
+    static let edgeRevealPadding: CGFloat = 56
 
     static func fittedRect(remoteSize: CGSize, in available: CGSize) -> CGRect {
         guard remoteSize.width > 0, remoteSize.height > 0 else { return .zero }
@@ -388,8 +400,14 @@ struct RemoteViewport {
         scale: CGFloat,
         available: CGSize
     ) -> CGSize {
-        let maximumX = max(0, (displayRect.width * scale - available.width) / 2)
-        let maximumY = max(0, (displayRect.height * scale - available.height) / 2)
+        let scaledWidth = displayRect.width * scale
+        let scaledHeight = displayRect.height * scale
+        let maximumX = scaledWidth > available.width
+            ? (scaledWidth - available.width) / 2 + edgeRevealPadding
+            : 0
+        let maximumY = scaledHeight > available.height
+            ? (scaledHeight - available.height) / 2 + edgeRevealPadding
+            : 0
         return CGSize(
             width: min(max(proposed.width, -maximumX), maximumX),
             height: min(max(proposed.height, -maximumY), maximumY)

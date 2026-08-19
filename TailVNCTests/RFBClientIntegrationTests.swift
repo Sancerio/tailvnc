@@ -26,14 +26,17 @@ final class RFBClientIntegrationTests: XCTestCase {
             XCTAssertEqual(image.width, 2)
             XCTAssertEqual(image.height, 2)
             XCTAssertEqual(size, CGSize(width: 2, height: 2))
+            client.sendPointer(x: 1, y: 1, buttonMask: 1)
+            client.sendPointer(x: 1, y: 1, buttonMask: 0)
+            client.sendKey(0xff0d)
+            client.requestFullRefresh()
             frameReceived.fulfill()
         }
 
         client.connect(host: "127.0.0.1", port: port, password: "testpass")
         await fulfillment(of: [connected, frameReceived], timeout: 5)
-        client.disconnect()
-
         try await server.waitUntilComplete()
+        client.disconnect()
     }
 }
 
@@ -176,6 +179,19 @@ private final class MockRFBServer: @unchecked Sendable {
 
         let incrementalRequest = try await receiveExactly(10, from: connection)
         XCTAssertEqual(incrementalRequest.prefix(2), Data([3, 1]))
+
+        let pointerDown = try await receiveExactly(6, from: connection)
+        XCTAssertEqual(pointerDown, Data([5, 1, 0, 1, 0, 1]))
+        let pointerUp = try await receiveExactly(6, from: connection)
+        XCTAssertEqual(pointerUp, Data([5, 0, 0, 1, 0, 1]))
+
+        let returnDown = try await receiveExactly(8, from: connection)
+        XCTAssertEqual(returnDown, Data([4, 1, 0, 0, 0, 0, 0xff, 0x0d]))
+        let returnUp = try await receiveExactly(8, from: connection)
+        XCTAssertEqual(returnUp, Data([4, 0, 0, 0, 0, 0, 0xff, 0x0d]))
+
+        let fullRefresh = try await receiveExactly(10, from: connection)
+        XCTAssertEqual(fullRefresh.prefix(2), Data([3, 0]))
     }
 
     private func receiveExactly(_ count: Int, from connection: NWConnection) async throws -> Data {

@@ -94,6 +94,10 @@ final class RemoteSessionModel: ObservableObject {
         client?.sendKey(keysym)
     }
 
+    func refreshScreen() {
+        client?.requestFullRefresh()
+    }
+
 #if DEBUG
     func prepareUITestSession() {
         guard let buffer = try? RFBFrameBuffer(width: 1_440, height: 900),

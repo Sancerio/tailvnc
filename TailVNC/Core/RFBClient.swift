@@ -103,7 +103,7 @@ final class RFBClient: @unchecked Sendable {
         var message = Data([5, buttonMask])
         message.appendUInt16BE(x)
         message.appendUInt16BE(y)
-        sendInBackground(message)
+        enqueueInputMessage(message)
     }
 
     func sendScroll(up: Bool, steps: Int = 2) {
@@ -129,12 +129,23 @@ final class RFBClient: @unchecked Sendable {
     private func sendKeyEvent(_ keysym: UInt32, isDown: Bool) {
         var message = Data([4, isDown ? 1 : 0, 0, 0])
         message.appendUInt32BE(keysym)
-        sendInBackground(message)
+        enqueueInputMessage(message)
     }
 
-    private func sendInBackground(_ message: Data) {
-        Task { [weak self] in
-            try? await self?.send(message)
+    func requestFullRefresh() {
+        guard remoteWidth > 0, remoteHeight > 0 else { return }
+        var message = Data([3, 0])
+        message.appendUInt16BE(0)
+        message.appendUInt16BE(0)
+        message.appendUInt16BE(remoteWidth)
+        message.appendUInt16BE(remoteHeight)
+        enqueueInputMessage(message)
+    }
+
+    private func enqueueInputMessage(_ message: Data) {
+        networkQueue.async { [weak self] in
+            guard let connection = self?.connection else { return }
+            connection.send(content: message, completion: .contentProcessed { _ in })
         }
     }
 
